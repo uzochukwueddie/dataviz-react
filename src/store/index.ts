@@ -1,16 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { configureStore } from '@reduxjs/toolkit';
 import { TypedUseSelectorHook, useSelector, useDispatch } from 'react-redux';
+import authReducer from '../features/auth/reducers/auth.reducer';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export interface RootState {};
+export interface RootState {
+    authUser: ReturnType<typeof authReducer>
+};
 
-const rootReducer = (_state: RootState | undefined, action: any): RootState => {
+const rootReducer = (state: RootState | undefined, action: any): RootState => {
     if (action.type === 'logout/updateLogout') {
-        return {}
+        return {
+            authUser: authReducer(undefined, action)
+        }
     }
 
-    return {};
+    return {
+        authUser: authReducer(state?.authUser, action)
+    };
 };
 
 export const store = configureStore({

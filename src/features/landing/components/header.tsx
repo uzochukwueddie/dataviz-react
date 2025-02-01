@@ -16,13 +16,13 @@ const Header: FC<IHeader> = ({ onOpenModal }): ReactElement => {
           <div className="hidden sm:flex sm:items-center sm:space-x-4">
             <button
               onClick={() => onOpenModal('login')}
-              className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+              className="text-gray-700 cursor-pointer hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
             >
               Log in
             </button>
             <button
               onClick={() => onOpenModal('signup')}
-              className="bg-blue-600 text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
+              className="bg-blue-600 cursor-pointer text-white hover:bg-blue-700 px-4 py-2 rounded-md text-sm font-medium"
             >
               Sign up
             </button>
