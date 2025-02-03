@@ -7,6 +7,7 @@ import { LOGIN_USER } from '../graphql/auth';
 import { addAuthUser } from '../reducers/auth.reducer';
 import { getLocalStorageItem, setLocalStorageItem } from '../../../shared/utils/utils';
 import { ToastService } from '../../../shared/services/toast.service';
+import { addDataSource } from '../../datasources/reducers/datasource.reducer';
 
 interface IAuthPayload {
   email: string;
@@ -42,7 +43,13 @@ const LoginModal: FC<{ onClose: () => void; onOpenModal: (type: string) => void 
           setLocalStorageItem('activeProject', JSON.stringify(projectIds[0]));
         }
         if (activeProject !== 'undefined' && activeProject !== null) {
-          // TODO: DISPATCH DATASOURCE
+          dispatch(
+            addDataSource({
+              active: activeProject ? activeProject : projectIds[0],
+              database: activeProject ? activeProject.database : projectIds[0].database,
+              dataSOurce: projectIds
+            })
+          );
         }
         navigate('/dashboard');
       }
