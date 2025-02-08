@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, ReactElement, useEffect, useState } from 'react';
+import { ChangeEvent, FC, ReactElement, useEffect, useRef, useState } from 'react';
 import { useAppSelector } from '../../../store';
 import { IReduxState } from '../../../store/store.interface';
 import { useDispatch } from 'react-redux';
@@ -19,6 +19,7 @@ const PromptEditor: FC<PromptEditorProps> = ({ onLoadingChange, onPromptResult }
   const sqlData = useAppSelector((state: IReduxState) => state.sqlQuery);
   const [prompt, setPrompt] = useState<string>('');
   const [sqlQuery, setSqlQuery] = useState<string>('No SQL generated yet');
+  const codePreRef = useRef<HTMLPreElement>(null);
   const dispatch = useDispatch();
   const [getSQLQueryData] = useLazyQuery(GET_POSTGRESQL_TABLE_DATA, {
     fetchPolicy: 'no-cache'
@@ -75,8 +76,18 @@ const PromptEditor: FC<PromptEditorProps> = ({ onLoadingChange, onPromptResult }
     if (sqlData && sqlData.promptQuery) {
       setSqlQuery(sqlData.promptQuery);
     }
-    hljs.highlightAll();
   }, [sqlData]);
+
+  useEffect(() => {
+    if (codePreRef.current) {
+      const preElement = codePreRef.current;
+      const codeElement = preElement.querySelector('code');
+      if (codeElement) {
+        codeElement.removeAttribute('data-highlighted');
+      }
+      hljs.highlightAll();
+    }
+  }, []);
 
   return (
     <div className="h-full flex flex-col">
@@ -116,7 +127,7 @@ const PromptEditor: FC<PromptEditorProps> = ({ onLoadingChange, onPromptResult }
           </button>
         </div>
         <div className="bg-gray-50 rounded-lg font-mono text-sm overflow-x-auto">
-          <pre>
+          <pre ref={codePreRef}>
             <code className="language-sql">{sqlQuery}</code>
           </pre>
         </div>

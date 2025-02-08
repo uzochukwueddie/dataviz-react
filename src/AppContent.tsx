@@ -8,6 +8,7 @@ import { useLocation } from 'react-router-dom';
 import Sidebar from './shared/components/sidebar';
 import { useAppSelector } from './store';
 import { IReduxState } from './store/store.interface';
+import IconSidebar from './shared/components/icon-sidebar';
 
 interface ISidebarItem {
   activeUrl: string;
@@ -41,7 +42,7 @@ const AppContent: FC = (): ReactElement => {
   return (
     <div className="w-screem min-h-screen flex relative overflow-hidden">
       {hasUserData && !sidebarItem.isActive && sidebarItem.activeUrl !== '/' && <Sidebar />}
-      {hasUserData && sidebarItem.isActive && sidebarItem.activeUrl !== '/' && <div>Icon Sidebar</div>}
+      {hasUserData && sidebarItem.isActive && sidebarItem.activeUrl !== '/' && <IconSidebar />}
       <div className="w-full">
         <AppRouter />
         <Toast toasts={toasts} />

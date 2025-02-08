@@ -62,7 +62,7 @@ const CustomDropdown: FC<ICustomDropdownProps> = ({
     <div className="inherit w-full relative" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
-        className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md text-left flex justify-between items-center hover:bg-gray-50 focus:outline-none"
+        className="w-full px-4 py-2 cursor-pointer bg-white border border-gray-300 rounded-md text-left flex justify-between items-center hover:bg-gray-50 focus:outline-none"
         aria-expanded={isOpen}
       >
         <span className="text-gray-700 truncate overflow-hidden whitespace-nowrap w-[90%]">
