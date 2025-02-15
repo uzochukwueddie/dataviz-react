@@ -9,6 +9,7 @@ import Sidebar from './shared/components/sidebar';
 import { useAppSelector } from './store';
 import { IReduxState } from './store/store.interface';
 import IconSidebar from './shared/components/icon-sidebar';
+import { deleteLocalStorageItem } from './shared/utils/utils';
 
 interface ISidebarItem {
   activeUrl: string;
@@ -38,6 +39,33 @@ const AppContent: FC = (): ReactElement => {
       });
     };
   }, [pathname]);
+
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      deleteLocalStorageItem('activeProject');
+    };
+
+    const handleUnload = () => {
+      deleteLocalStorageItem('activeProject');
+    };
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'hidden') {
+        deleteLocalStorageItem('activeProject');
+      }
+    };
+
+    // Add event listeners
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('unload', handleUnload);
+    window.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('unload', handleUnload);
+      window.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
 
   return (
     <div className="w-screem min-h-screen flex relative overflow-hidden">

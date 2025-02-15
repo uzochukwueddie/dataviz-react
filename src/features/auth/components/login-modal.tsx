@@ -47,7 +47,7 @@ const LoginModal: FC<{ onClose: () => void; onOpenModal: (type: string) => void 
             addDataSource({
               active: activeProject ? activeProject : projectIds[0],
               database: activeProject ? activeProject.database : projectIds[0].database,
-              dataSOurce: projectIds
+              dataSource: projectIds
             })
           );
         }
