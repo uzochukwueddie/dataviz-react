@@ -49,21 +49,13 @@ const AppContent: FC = (): ReactElement => {
       deleteLocalStorageItem('activeProject');
     };
 
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'hidden') {
-        deleteLocalStorageItem('activeProject');
-      }
-    };
-
     // Add event listeners
     window.addEventListener('beforeunload', handleBeforeUnload);
     window.addEventListener('unload', handleUnload);
-    window.addEventListener('visibilitychange', handleVisibilityChange);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       window.removeEventListener('unload', handleUnload);
-      window.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, []);
 
