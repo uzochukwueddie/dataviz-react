@@ -7,7 +7,10 @@ import { truncateText } from '../../../../shared/utils/utils';
 // Register Chart.js components
 Chart.register(...registerables);
 
-const BarChart: FC<{ chartData: IChartResult | null }> = ({ chartData }): ReactElement => {
+const BarChart: FC<{ chartData: IChartResult | null; previewWidth: number }> = ({
+  chartData,
+  previewWidth
+}): ReactElement => {
   const chartRef = useRef<HTMLCanvasElement | null>(null);
   const chartInstance = useRef<Chart | null>(null);
 
@@ -120,8 +123,8 @@ const BarChart: FC<{ chartData: IChartResult | null }> = ({ chartData }): ReactE
   }, [chartData]);
 
   return (
-    <div>
-      <canvas ref={chartRef} className="min-w-[900px] min-h-[550px]" />
+    <div className="min-h-[550px] relative" style={{ width: `${previewWidth}vw` }}>
+      <canvas ref={chartRef} />
     </div>
   );
 };

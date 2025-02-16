@@ -16,6 +16,8 @@ interface IChartPreview {
 const ChartPreview: FC<IChartPreview> = ({ sqlQuery, chartConfig }): ReactElement => {
   const number = useRef<number>(0);
   const codePreRef = useRef<HTMLPreElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
+  const previewWidth = useRef<number>(0);
   if (chartConfig && chartConfig.type === 'number') {
     const { data } = chartConfig as IChartResult;
     number.current = data as number;
@@ -38,6 +40,13 @@ const ChartPreview: FC<IChartPreview> = ({ sqlQuery, chartConfig }): ReactElemen
     eventBus.publish(EventType.SAVE_CHART, info);
   };
 
+  // Convert from px to viewport width (vw)
+  const pxToVW = (px: number): number => {
+    // Get viewport width
+    const viewportWidth = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0);
+    return (px * 100) / viewportWidth;
+  };
+
   useEffect(() => {
     if (codePreRef.current) {
       const preElement = codePreRef.current;
@@ -47,10 +56,26 @@ const ChartPreview: FC<IChartPreview> = ({ sqlQuery, chartConfig }): ReactElemen
       }
       hljs.highlightAll();
     }
+
+    const resizeObserver = new ResizeObserver((entries: ResizeObserverEntry[]) => {
+      for (const entry of entries) {
+        previewWidth.current = pxToVW(entry.contentRect.width);
+      }
+    });
+
+    if (previewRef && previewRef.current) {
+      resizeObserver.observe(previewRef.current);
+    }
+
+    return () => {
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
   }, [chartConfig]);
 
   return (
-    <div className="border border-gray-200 h-full p-4 rounded-lg">
+    <div className="border border-gray-200 h-full p-4 rounded-lg" ref={previewRef}>
       <div className="bg-gray-50 rounded-lg font-mono text-sm overflow-x-auto mb-2">
         <pre ref={codePreRef}>
           <code className="language-sql">{sqlQuery}</code>
@@ -85,9 +110,15 @@ const ChartPreview: FC<IChartPreview> = ({ sqlQuery, chartConfig }): ReactElemen
           )}
 
           {chartConfig && chartConfig.type === 'number' && <NumberCanvas number={number.current} />}
-          {chartConfig && chartConfig.type === 'bar' && <BarChart chartData={chartConfig} />}
-          {chartConfig && chartConfig.type === 'line' && <LineChart chartData={chartConfig} />}
-          {chartConfig && chartConfig.type === 'pie' && <PieChart chartData={chartConfig} />}
+          {chartConfig && chartConfig.type === 'bar' && (
+            <BarChart chartData={chartConfig} previewWidth={previewWidth.current} />
+          )}
+          {chartConfig && chartConfig.type === 'line' && (
+            <LineChart chartData={chartConfig} previewWidth={previewWidth.current} />
+          )}
+          {chartConfig && chartConfig.type === 'pie' && (
+            <PieChart chartData={chartConfig} previewWidth={previewWidth.current} />
+          )}
         </div>
       </div>
     </div>
